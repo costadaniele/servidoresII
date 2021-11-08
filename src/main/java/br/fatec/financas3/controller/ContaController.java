@@ -19,16 +19,17 @@ import br.fatec.financas3.service.ContaService;
 
 @RestController
 @RequestMapping("/contas")
-public class ContaController {
+public class ContaController implements ControllerInterface<Conta> {
 
 	@Autowired
 	private ContaService service;
-
+	
+	@Override
 	@GetMapping
 	public ResponseEntity<List<Conta>> getAll() {
 		return ResponseEntity.ok(service.findAll());
 	}
-
+	@Override
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
 		Conta _conta = service.findById(id);
@@ -36,13 +37,14 @@ public class ContaController {
 			return ResponseEntity.ok(_conta);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
-
+	@Override
 	@PostMapping
 	public ResponseEntity<Conta> post(@RequestBody Conta conta) {
 		service.create(conta);
 		return ResponseEntity.ok(conta);
 	}
-
+	
+	@Override
 	@PutMapping
 	public ResponseEntity<?> put(@RequestBody Conta conta) {
 		if (service.update(conta)) {
@@ -70,7 +72,8 @@ public class ContaController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
-
+	
+	@Override
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		if (service.delete(id)) {
